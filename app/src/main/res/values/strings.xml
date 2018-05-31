@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AspectjDemo</string>
+
+    <string name="call">打电话</string>
+</resources>

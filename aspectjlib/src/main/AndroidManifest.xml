@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kawa.aspectjlib">
+
+    <application>
+        <activity
+            android:name=".model.permission.PermissionRequestActivity"
+            android:label="@string/title_activity_permission_request"
+            android:theme="@style/translucent"/>
+    </application>
+
+</manifest>

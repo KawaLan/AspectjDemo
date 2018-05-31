@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">aspectjlib</string>
+    <string name="title_activity_permission_request">PermissionRequestActivity</string>
+</resources>

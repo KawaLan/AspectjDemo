@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Permission(value = {Manifest.permission.CALL_PHONE}, requestCode = 10001)
     public void call(View view) {
-        startActivity(getCallIntent("18011721275"));
+        startActivity(getCallIntent("110"));
     }
 
     @PermissionDenied(value = "你的权限被拒绝了")

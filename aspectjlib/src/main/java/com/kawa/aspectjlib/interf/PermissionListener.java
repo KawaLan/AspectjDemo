@@ -17,5 +17,5 @@ public interface PermissionListener {
     void PermissionDenied(int requestCode, List<String> denyList);
 
     //取消权限
-    void PermissionCanceled(int requestCode);
+    void PermissionCanceled(int requestCode, List<String> permissions);
 }

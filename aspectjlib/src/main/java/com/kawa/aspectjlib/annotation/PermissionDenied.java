@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface PermissionDenied {
-    String value() default "";
+    String[] value() default {};
     boolean isDefaultDialog() default true;
 }

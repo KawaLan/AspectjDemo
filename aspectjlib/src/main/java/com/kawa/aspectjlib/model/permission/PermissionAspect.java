@@ -9,6 +9,7 @@ import com.kawa.aspectjlib.annotation.PermissionCancel;
 import com.kawa.aspectjlib.annotation.PermissionDenied;
 import com.kawa.aspectjlib.dialog.DialogUtils;
 import com.kawa.aspectjlib.interf.PermissionListener;
+import com.kawa.aspectjlib.utils.StringTipUtils;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -69,50 +70,62 @@ public class PermissionAspect {
                 if (methods == null || methods.length == 0) {
                     return;
                 }
+                boolean isPermissionDeniedAnnotation = false;
                 for (Method method : methods) {
-                    boolean isPermissionDeniedAnnotation = method.isAnnotationPresent(PermissionDenied.class);
+                    isPermissionDeniedAnnotation = method.isAnnotationPresent(PermissionDenied.class);
                     if (isPermissionDeniedAnnotation) {
                         method.setAccessible(true);//允许通过反射访问字段
                         PermissionDenied permissionDenied = method.getAnnotation(PermissionDenied.class);
                         if (permissionDenied == null) {
                             return;
                         }
-                        String value = permissionDenied.value();
+                        String[] value = permissionDenied.value();
+                        String valueItem = (value != null && value.length > 0) ? (requestCode <= value.length - 1 ? value[requestCode] : "") : "";
                         boolean isDefault = permissionDenied.isDefaultDialog();
                         handlerOption(isDefault,
-                                TextUtils.isEmpty(value) ? "权限被拒绝，请先去设置权限" : value,
+                                TextUtils.isEmpty(valueItem) ? StringTipUtils.getPermissionTip(denyList) : valueItem,
                                 finalContext,
                                 object,
                                 method,
                                 requestCode);
+                        break;
                     }
+                }
+                if (!isPermissionDeniedAnnotation) {
+                    DialogUtils.showDialog(finalContext, StringTipUtils.getPermissionTip(denyList), requestCode);
                 }
             }
 
             @Override
-            public void PermissionCanceled(int requestCode) {
+            public void PermissionCanceled(int requestCode, List<String> permissions) {
                 Class<?> currentClass = object.getClass();
                 Method[] methods = currentClass.getDeclaredMethods();
                 if (methods == null || methods.length == 0) {
                     return;
                 }
+                boolean isPermissionCancelAnnotation = false;
                 for (Method method : methods) {
-                    boolean isPermissionCancelAnnotation = method.isAnnotationPresent(PermissionCancel.class);
+                    isPermissionCancelAnnotation = method.isAnnotationPresent(PermissionCancel.class);
                     if (isPermissionCancelAnnotation) {
                         method.setAccessible(true);//允许通过反射访问字段
                         PermissionCancel permissionCancel = method.getAnnotation(PermissionCancel.class);
                         if (permissionCancel == null) {
                             return;
                         }
-                        String value = permissionCancel.value();
+                        String[] value = permissionCancel.value();
+                        String valueItem = (value != null && value.length > 0) ? (requestCode < value.length - 1 ? value[requestCode] : "") : "";
                         boolean isDefault = permissionCancel.isDefaultDialog();
                         handlerOption(isDefault,
-                                TextUtils.isEmpty(value) ? "权限被取消了，请先去设置权限" : value,
+                                TextUtils.isEmpty(valueItem) ? StringTipUtils.getPermissionTip(permissions) : valueItem,
                                 finalContext,
                                 object,
                                 method,
                                 requestCode);
+                        break;
                     }
+                }
+                if (!isPermissionCancelAnnotation) {
+                    DialogUtils.showDialog(finalContext, StringTipUtils.getPermissionTip(permissions), requestCode);
                 }
             }
         });
@@ -120,6 +133,7 @@ public class PermissionAspect {
 
     /**
      * 处理逻辑
+     *
      * @param isDefault
      * @param msg
      * @param finalContext

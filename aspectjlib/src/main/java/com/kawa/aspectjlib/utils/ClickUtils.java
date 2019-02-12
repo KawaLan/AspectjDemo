@@ -24,7 +24,7 @@ public class ClickUtils {
             public void run() {
                 isDoubleClick = false;
             }
-        }, 1000);
+        }, 500);
         return true;
     }
 }

@@ -11,6 +11,7 @@ import com.kawa.aspectjlib.interf.PermissionListener;
 import com.kawa.aspectjlib.utils.PermissionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /****
@@ -118,7 +119,8 @@ public class PermissionRequestActivity extends Activity {
             } else {
                 //权限被取消
                 if (listener != null) {
-                    listener.PermissionCanceled(requestCode);
+                    List<String> list = Arrays.asList(permissions);
+                    listener.PermissionCanceled(requestCode, list);
                 }
             }
         }

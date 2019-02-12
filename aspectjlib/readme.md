@@ -25,18 +25,39 @@ android.applicationVariants.all { variant ->
 }
 ```
 
-3.使用权限模块工具  
-@Permission(value = {权限}, requestCode = 请求码)  
-public void xxxx() {
-    //有权限，你的操作
-}
+3.使用方法
 
-@PermissionDenied(value = "您的权限被拒绝了，请先去设置")  
-private void xxxx(int requestCode) {}
++ 默认提示的
 
-@PermissionCancel(value = "您的权限被取消了，请先去设置")  
-private void xxxx(int requestCode) {}
+    /**
+     * 去拍照
+     */
+    @Permission(value = {Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE},
+            requestCode = 1)
+    private void goTakePicture() {
 
+    }
+注意：如果一个页面有多处方法需要处理权限的，并且是需要处理返回码requestCode的，requestCode的一定要从1，2，3....的次序
+
++ 需要自定义提示
+  @PermissionDenied(value = "你的权限被拒绝了")
+    private void PermissionDenied(int requestCode) {
+  }
+
+  @PermissionCancel(value = "您的权限被取消了，请先去设置")
+    private void PermissionCancel(int requestCode) {
+  }
+
++ 自定义弹框
+    @PermissionDenied(isDefaultDialog = true)
+    private void PermissionDenied(int requestCode) {
+    }
+
+    @PermissionCancel(isDefaultDialog = true)
+    private void PermissionCancel(int requestCode) {
+    }
 
 如果需要在设置完权限回来处理相应操作的，请在响应页面判断onActivityResult的requestCode返回
 

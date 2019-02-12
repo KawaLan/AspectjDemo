@@ -24,9 +24,15 @@
 -keep @com.kawa.aspectjlib.annotation.obfuscator.ObfuscateKeepAll class * { *; }
 
 #类中所有public成员不混淆
--keep @com.kawa.aspectjlib.annotation.obfuscator.ObfuscateKeepPublic class * {
+-keepclassmembers @com.kawa.aspectjlib.annotation.obfuscator.ObfuscateKeepPublic class * {
   public <fields>;
   public <methods>;
+}
+
+#类中所有private成员不混淆
+-keepclassmembers @com.kawa.aspectjlib.annotation.obfuscator.ObfuscateKeepPrivate class * {
+  private <fields>;
+  private <methods>;
 }
 
 #保留带注释的成员,适用于类和内部类
@@ -43,4 +49,10 @@
 #保留所有实现IObfuscateKeepAll接口的类,(注意接口有传递性,他的子类也会被keep)(内部类如果没有继承此接口会被混淆)
 -keep class * implements com.kawa.aspectjlib.annotation.obfuscator.IObfuscateKeepAll {
 	*;
+}
+
+#避免权限回调方法混淆
+-keepclassmembers class * {
+    private void PermissionDenied(int);
+    private void PermissionCancel(int);
 }

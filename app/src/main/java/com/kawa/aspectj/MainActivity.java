@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(getCallIntent("110"));
     }
 
-    @PermissionDenied(value = "你的权限被拒绝了")
+    @PermissionDenied(isDefaultDialog = true)
     private void PermissionDenied(int requestCode) {
     }
 
-    @PermissionCancel(value = "您的权限被取消了，请先去设置")
+    @PermissionCancel(isDefaultDialog = true)
     private void PermissionCancel(int requestCode) {
     }
 

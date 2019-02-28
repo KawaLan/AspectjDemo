@@ -4,9 +4,11 @@ import android.util.Log;
 
 import com.kawa.aspectjlib.utils.ClickUtils;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 
 /****
  * <pre>
@@ -18,14 +20,27 @@ import org.aspectj.lang.annotation.Aspect;
 @Aspect
 public class ClickAspect {
 
+    private boolean isEnableFastOnClick = false;
+
+    @Before("execution(@com.kawa.aspectjlib.annotation.EnableFastOnClick * *..*.*(..))")
+    public void enableFastOnClick(JoinPoint joinPoint) throws Throwable {
+        isEnableFastOnClick = true;
+    }
+
     @Around("execution(* android.view.View.OnClickListener.onClick(..)) " +
             "|| execution(* android.widget.AdapterView.OnItemClickListener.onItemClick(..))")
     public void onClickListener(ProceedingJoinPoint joinPoint) throws Throwable {
         if (ClickUtils.isEnableStartActivity()) {
+            isEnableFastOnClick = false;
             joinPoint.proceed();
             Log.d("ClickAspect", "normal click!");
         } else {
-            Log.d("ClickAspect", "The clicks are too fast!");
+            if (isEnableFastOnClick) {
+                joinPoint.proceed();
+                Log.d("ClickAspect", "already fast click!");
+            }else{
+                Log.d("ClickAspect", "The clicks are too fast!");
+            }
         }
     }
 }
